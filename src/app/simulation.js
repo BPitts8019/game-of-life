@@ -1,6 +1,6 @@
 let simLoop; //the handle to the sim-loop
 let buffer = []; //map being worked on in current generation
-let dispay = []; //current map - displayed on the screen
+let display = []; //current map - displayed on the screen
 let currGeneration = 1; //generation represented by display
 let maxGeneration = 0;
 
@@ -11,7 +11,13 @@ const nextGeneration = () => {
    console.log(`Generation: ${currGeneration}`);
 
    //do some stuff
+   for (let i = 0; i < 100; i++) {
+      buffer.push((display[i] || i) * 2);
+   }
 
+   display = buffer;
+   buffer = [];
+   console.log(JSON.stringify(display));
    currGeneration += 1;
    if (maxGeneration != 0 && currGeneration > maxGeneration) {
       clearInterval(simLoop);
@@ -56,6 +62,6 @@ export const stop = () => {
  */
 export const reset = () => {
    buffer = [];
-   dispay = [];
+   display = [];
    currGeneration = 0;
 };
