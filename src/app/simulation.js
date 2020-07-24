@@ -1,7 +1,7 @@
 let simLoop; //the handle to the sim-loop
 let buffer = []; //map being worked on in current generation
 let dispay = []; //current map - displayed on the screen
-let currGeneration = 0; //generation represented by display
+let currGeneration = 1; //generation represented by display
 let maxGeneration = 0;
 
 /**
@@ -9,15 +9,17 @@ let maxGeneration = 0;
  */
 const nextGeneration = () => {
    console.log(`Generation: ${currGeneration}`);
-   currGeneration += 1;
 
-   if (maxGeneration != 0 && currGeneration >= maxGeneration) {
+   //do some stuff
+
+   currGeneration += 1;
+   if (maxGeneration != 0 && currGeneration > maxGeneration) {
       clearInterval(simLoop);
    }
 };
 
 /**
- * Starts the simulation given some options
+ * Starts/resumes the simulation given some options
  * @param {object} options
  */
 export const start = ({ delay = 200, maxGen = maxGeneration }) => {
@@ -35,12 +37,25 @@ export const start = ({ delay = 200, maxGen = maxGeneration }) => {
 
    console.log(`delay: ${delay}`);
    console.log(`maxGen: ${maxGen}`);
-   if (maxGen === 0 || currGeneration < maxGen) {
-      maxGeneration = maxGen;
-      simLoop = setInterval(nextGeneration, delay);
+   if (currGeneration > maxGen) {
+      reset();
    }
+   maxGeneration = maxGen;
+   simLoop = setInterval(nextGeneration, delay);
 };
 
+/**
+ * Stops the simulation
+ */
 export const stop = () => {
    clearInterval(simLoop);
+};
+
+/**
+ * Resets the current simulation
+ */
+export const reset = () => {
+   buffer = [];
+   dispay = [];
+   currGeneration = 0;
 };
