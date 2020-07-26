@@ -2,7 +2,7 @@ let simLoop; //the handle to the sim-loop
 let buffer = []; //map being worked on in current generation
 let display = []; //current map - displayed on the screen
 let currGeneration = 1; //generation represented by display
-let maxGeneration = 0;
+let maxGenerations = 0;
 
 /**
  * One call of this function represents one generation
@@ -19,7 +19,7 @@ const nextGeneration = () => {
    buffer = [];
    console.log(JSON.stringify(display));
    currGeneration += 1;
-   if (maxGeneration != 0 && currGeneration > maxGeneration) {
+   if (maxGenerations != 0 && currGeneration > maxGenerations) {
       clearInterval(simLoop);
    }
 };
@@ -28,13 +28,16 @@ const nextGeneration = () => {
  * Starts/resumes the simulation given some options
  * @param {object} options
  */
-export const start = ({ delay = 200, maxGen = maxGeneration }) => {
-   if (delay < 100) {
-      delay = 100;
+export const start = ({ delay = 200, maxGen = maxGenerations }) => {
+   const MIN_DELAY = 100;
+   const MAX_DELAY = 1000;
+
+   if (delay < MIN_DELAY) {
+      delay = MIN_DELAY;
    }
 
-   if (delay > 1000) {
-      delay = 1000;
+   if (delay > MAX_DELAY) {
+      delay = MAX_DELAY;
    }
 
    if (maxGen < 0) {
@@ -46,7 +49,7 @@ export const start = ({ delay = 200, maxGen = maxGeneration }) => {
    if (currGeneration > maxGen) {
       reset();
    }
-   maxGeneration = maxGen;
+   maxGenerations = maxGen;
    simLoop = setInterval(nextGeneration, delay);
 };
 
@@ -64,4 +67,13 @@ export const reset = () => {
    buffer = [];
    display = [];
    currGeneration = 0;
+};
+
+/**
+ * Renders the next generation in simulation
+ * This will render the next generation  regardless
+ * of maxGenerations
+ */
+export const next = () => {
+   nextGeneration();
 };
