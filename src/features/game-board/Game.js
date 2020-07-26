@@ -6,7 +6,7 @@ export default () => {
       <>
          <button
             onClick={() => {
-               start({ delay: 500, maxGen: 20 });
+               start(500, 5);
             }}
          >
             Start

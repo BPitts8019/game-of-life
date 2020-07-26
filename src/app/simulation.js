@@ -1,14 +1,15 @@
 const MAX_ROWS = 3;
 const MAX_COLUMNS = 3;
+
 let simLoop; //the handle to the sim-loop
-let buffer = initBuffer(); //map being worked on in current generation
+let buffer = null; //map being worked on in current generation
 let display = [
    [0, 1, 0],
    [0, 1, 0],
    [0, 1, 0],
 ]; //current map - displayed on the screen
 let currGeneration = 1; //generation represented by display
-let maxGenerations = 0;
+let maxGenerations = 0; // 0 == continue indefinitely
 
 const initBuffer = () => {
    let new_array = [];
@@ -20,14 +21,16 @@ const initBuffer = () => {
 };
 
 const getNeighborValue = (row, column) => {
-   if (row < MAX_ROWS && column < MAX_COLUMNS) {
-      return display[row][column];
+   if (row >= 0 && row < MAX_ROWS) {
+      if (column >= 0 && column < MAX_COLUMNS) {
+         return display[row][column];
+      }
    }
 
    return 0;
 };
 
-const countNeighbors = () => {
+const countNeighbors = (row_idx, cell_idx) => {
    let rtn_num = 0;
    rtn_num += getNeighborValue(row_idx - 1, cell_idx - 1);
    rtn_num += getNeighborValue(row_idx - 1, cell_idx);
@@ -50,22 +53,21 @@ const nextGeneration = () => {
    //simulation calculations
    //use display as data, but save changes to the buffer
    //for each cell,
-   //get number of neighbors
-   //check alive -or- dead
-   //update cell in buffer
    buffer.forEach((row, row_idx) => {
       row.forEach((cell, cell_idx) => {
+         //get number of neighbors
          //apply game-of-life rules
-         buffer[row_idx][cell_idx] = countNeighbors();
+         //update cell in buffer
+         const num = countNeighbors(row_idx, cell_idx);
+         buffer[row_idx][cell_idx] = num;
       });
    });
 
    //swap the display and the buffer
    display = buffer;
-   buffer = [];
    console.log(JSON.stringify(display));
    currGeneration += 1;
-   if (maxGenerations != 0 && currGeneration > maxGenerations) {
+   if (maxGenerations !== 0 && currGeneration > maxGenerations) {
       clearInterval(simLoop);
    }
 };
@@ -74,7 +76,8 @@ const nextGeneration = () => {
  * Starts/resumes the simulation given some options
  * @param {object} options
  */
-export const start = ({ delay = 200, maxGen = maxGenerations }) => {
+export const start = (delay = 200, maxGen = maxGenerations) => {
+   // const start = (delay = 200, maxGen = maxGenerations) => {
    const MIN_DELAY = 100;
    const MAX_DELAY = 1000;
 
@@ -90,9 +93,13 @@ export const start = ({ delay = 200, maxGen = maxGenerations }) => {
       maxGen = 0;
    }
 
+   if (!buffer) {
+      buffer = initBuffer();
+   }
+
    console.log(`delay: ${delay}`);
    console.log(`maxGen: ${maxGen}`);
-   if (currGeneration > maxGen) {
+   if (maxGen !== 0 && currGeneration > maxGen) {
       reset();
    }
    maxGenerations = maxGen;
@@ -103,6 +110,7 @@ export const start = ({ delay = 200, maxGen = maxGenerations }) => {
  * Stops the simulation
  */
 export const stop = () => {
+   // const stop = () => {
    clearInterval(simLoop);
 };
 
@@ -110,8 +118,9 @@ export const stop = () => {
  * Resets the current simulation
  */
 export const reset = () => {
-   buffer = [];
-   display = [];
+   // const reset = () => {
+   buffer = initBuffer();
+   display = initBuffer();
    currGeneration = 0;
 };
 
@@ -121,5 +130,8 @@ export const reset = () => {
  * of maxGenerations
  */
 export const next = () => {
+   // const next = () => {
    nextGeneration();
 };
+
+// start();
