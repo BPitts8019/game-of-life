@@ -1,8 +1,45 @@
+const MAX_ROWS = 3;
+const MAX_COLUMNS = 3;
 let simLoop; //the handle to the sim-loop
-let buffer = []; //map being worked on in current generation
-let display = []; //current map - displayed on the screen
+let buffer = initBuffer(); //map being worked on in current generation
+let display = [
+   [0, 1, 0],
+   [0, 1, 0],
+   [0, 1, 0],
+]; //current map - displayed on the screen
 let currGeneration = 1; //generation represented by display
 let maxGenerations = 0;
+
+const initBuffer = () => {
+   let new_array = [];
+   for (let i = 0; i < MAX_ROWS; i++) {
+      new_array.push(Array(MAX_COLUMNS).fill(0));
+   }
+
+   return new_array;
+};
+
+const getNeighborValue = (row, column) => {
+   if (row < MAX_ROWS && column < MAX_COLUMNS) {
+      return display[row][column];
+   }
+
+   return 0;
+};
+
+const countNeighbors = () => {
+   let rtn_num = 0;
+   rtn_num += getNeighborValue(row_idx - 1, cell_idx - 1);
+   rtn_num += getNeighborValue(row_idx - 1, cell_idx);
+   rtn_num += getNeighborValue(row_idx - 1, cell_idx + 1);
+   rtn_num += getNeighborValue(row_idx, cell_idx - 1);
+   rtn_num += getNeighborValue(row_idx, cell_idx + 1);
+   rtn_num += getNeighborValue(row_idx + 1, cell_idx - 1);
+   rtn_num += getNeighborValue(row_idx + 1, cell_idx);
+   rtn_num += getNeighborValue(row_idx + 1, cell_idx + 1);
+
+   return rtn_num;
+};
 
 /**
  * One call of this function represents one generation
@@ -10,11 +47,20 @@ let maxGenerations = 0;
 const nextGeneration = () => {
    console.log(`Generation: ${currGeneration}`);
 
-   //do some stuff
-   for (let i = 0; i < 100; i++) {
-      buffer.push((display[i] || i) * 2);
-   }
+   //simulation calculations
+   //use display as data, but save changes to the buffer
+   //for each cell,
+   //get number of neighbors
+   //check alive -or- dead
+   //update cell in buffer
+   buffer.forEach((row, row_idx) => {
+      row.forEach((cell, cell_idx) => {
+         //apply game-of-life rules
+         buffer[row_idx][cell_idx] = countNeighbors();
+      });
+   });
 
+   //swap the display and the buffer
    display = buffer;
    buffer = [];
    console.log(JSON.stringify(display));
