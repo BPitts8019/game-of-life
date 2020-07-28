@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { StyledCell } from "./StyledCell";
+import StyledCell from "./StyledCell";
 
-export default () => {
+const Cell = () => {
    const [isChecked, setIsChecked] = useState(true);
    const handleClick = (event) => {
       setIsChecked(!isChecked);
@@ -14,3 +14,5 @@ export default () => {
       ></StyledCell>
    );
 };
+
+export default Cell;
