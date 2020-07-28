@@ -9,7 +9,7 @@ const GameBoard = () => {
       <>
          <button
             onClick={() => {
-               start(200);
+               start(gameDispatch, 200);
             }}
          >
             Start
@@ -18,14 +18,12 @@ const GameBoard = () => {
          <button onClick={reset}>Reset</button>
          <button
             onClick={() => {
-               gameDispatch({
-                  type: "Testing NO-Provider",
-                  payload: "nothing",
-               });
+               next(gameDispatch);
             }}
          >
             Next
          </button>
+         <h1>Generation: {gameData.currentGeneration}</h1>
       </>
    );
 };
