@@ -1,17 +1,17 @@
 import { createContext } from "react";
 
-const INITIAL_STATE = {
+export const INITIAL_STATE = {
    display: [],
    isSimRunning: false,
    currentGeneration: 0,
 };
 
 const NO_PROVIDER = {
-   data: {
+   gameData: {
       ...INITIAL_STATE,
       error: new Error("You probably forgot to use a context <Provider>."),
    },
-   dispatch: (action) => {
+   gameDispatch: (action) => {
       throw new Error(
          `There was a problem dispatching ${action.type}. You probably forgot to use a context <Provider>..`
       );
