@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 export const INITIAL_STATE = {
    display: [],
-   isSimRunning: false,
+   isRunning: false,
    currentGeneration: 0,
 };
 
