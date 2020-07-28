@@ -1,4 +1,5 @@
 import React from "react";
+import Game from "./features/game-board/Game";
 import Cell from "./features/cell/Cell";
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
             <Cell />
             <Cell />
          </div>
+         <Game />
       </div>
    );
 }
