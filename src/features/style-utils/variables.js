@@ -3,8 +3,8 @@ export const MAX_WIDTH = "1040px";
 export const MIN_WIDTH = "400px";
 
 //*** Fonts ***//
-export const headerFont = `'Almendra SC', serif`;
-export const bodyFont = `'Almendra', serif`;
+export const headerFont = `'Oswald', Sans-Serif`;
+export const bodyFont = `'Quattrocento', Serif`;
 
 //*** Colors ***//
 const palette = [
