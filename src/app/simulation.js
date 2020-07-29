@@ -1,3 +1,5 @@
+import { updateGeneration } from "../context/game/actions";
+
 const MAX_ROWS = 25;
 const MAX_COLUMNS = 25;
 const PRESET_01 = [
@@ -70,6 +72,15 @@ const initBuffer = () => {
    return new_array;
 };
 
+/**
+ * Get the current value of cell in the display at row and column:
+ *    alive = 1
+ *    dead = 0
+ * If row or column are out of the bounds of the grid, assume the cell
+ * is dead.
+ * @param {number} row
+ * @param {number} column
+ */
 const getNeighborValue = (row, column) => {
    if (row >= 0 && row < MAX_ROWS) {
       if (column >= 0 && column < MAX_COLUMNS) {
@@ -80,23 +91,35 @@ const getNeighborValue = (row, column) => {
    return 0;
 };
 
-const countNeighbors = (row_idx, cell_idx) => {
+/**
+ * Counts the number of neighbors that are alive around the cell at
+ * row and column in display.
+ * @param {number} row
+ * @param {number} column
+ */
+const countNeighbors = (row, column) => {
    let rtn_num = 0;
-   rtn_num += getNeighborValue(row_idx - 1, cell_idx - 1);
-   rtn_num += getNeighborValue(row_idx - 1, cell_idx);
-   rtn_num += getNeighborValue(row_idx - 1, cell_idx + 1);
-   rtn_num += getNeighborValue(row_idx, cell_idx - 1);
-   rtn_num += getNeighborValue(row_idx, cell_idx + 1);
-   rtn_num += getNeighborValue(row_idx + 1, cell_idx - 1);
-   rtn_num += getNeighborValue(row_idx + 1, cell_idx);
-   rtn_num += getNeighborValue(row_idx + 1, cell_idx + 1);
+   rtn_num += getNeighborValue(row - 1, column - 1);
+   rtn_num += getNeighborValue(row - 1, column);
+   rtn_num += getNeighborValue(row - 1, column + 1);
+   rtn_num += getNeighborValue(row, column - 1);
+   rtn_num += getNeighborValue(row, column + 1);
+   rtn_num += getNeighborValue(row + 1, column - 1);
+   rtn_num += getNeighborValue(row + 1, column);
+   rtn_num += getNeighborValue(row + 1, column + 1);
 
    return rtn_num;
 };
 
-const applyRules = (row_idx, cell_idx) => {
-   const isAlive = display[row_idx][cell_idx];
-   const num_neighbors = countNeighbors(row_idx, cell_idx);
+/**
+ * Applies the rules of Conway's Game of Life to the cell at row and
+ * column in display.
+ * @param {number*} row
+ * @param {number*} column
+ */
+const applyRules = (row, column) => {
+   const isAlive = display[row][column];
+   const num_neighbors = countNeighbors(row, column);
 
    if (isAlive) {
       if (num_neighbors < 2 || num_neighbors > 3) {
@@ -115,9 +138,9 @@ const applyRules = (row_idx, cell_idx) => {
    return isAlive;
 };
 /**
- * One call of this function represents one generation
+ * Each call of this function represents one generation
  */
-const nextGeneration = () => {
+const nextGeneration = (dispatch) => {
    console.log(`Generation: ${currGeneration}`);
 
    //simulation calculations
@@ -135,7 +158,15 @@ const nextGeneration = () => {
    //swap the display and the buffer
    display = JSON.parse(JSON.stringify(buffer));
    console.log(JSON.stringify(display));
+
    currGeneration += 1;
+   dispatch(
+      updateGeneration({
+         display,
+         currentGeneration: currGeneration,
+      })
+   );
+
    if (maxGenerations !== 0 && currGeneration > maxGenerations) {
       clearInterval(simLoop);
    }
@@ -145,7 +176,7 @@ const nextGeneration = () => {
  * Starts/resumes the simulation given some options
  * @param {object} options
  */
-export const start = (delay = 50, maxGen = maxGenerations) => {
+export const start = (dispatch, delay = 50, maxGen = maxGenerations) => {
    // const start = (delay = 200, maxGen = maxGenerations) => {
    const MIN_DELAY = 100;
    const MAX_DELAY = 1000;
@@ -172,7 +203,7 @@ export const start = (delay = 50, maxGen = maxGenerations) => {
       reset();
    }
    maxGenerations = maxGen;
-   simLoop = setInterval(nextGeneration, delay);
+   simLoop = setInterval(nextGeneration, delay, dispatch);
 };
 
 /**
@@ -198,12 +229,12 @@ export const reset = () => {
  * This will render the next generation  regardless
  * of maxGenerations
  */
-export const next = () => {
+export const next = (dispatch) => {
    // const next = () => {
    if (!display || !buffer) {
       reset();
    }
-   nextGeneration();
+   nextGeneration(dispatch);
 };
 
 // start();

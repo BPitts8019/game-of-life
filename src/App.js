@@ -1,5 +1,5 @@
 import React from "react";
-import Game from "./features/game-board/Game";
+import GameBoard from "./features/game-board/GameBoard";
 import Cell from "./features/cell/Cell";
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
             <Cell />
             <Cell />
          </div>
-         <Game />
+         <GameBoard />
       </div>
    );
 }

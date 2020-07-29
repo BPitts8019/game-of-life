@@ -4,7 +4,7 @@ import styled from "styled-components";
 const alive = "#00cc00";
 const dead = "#cc0000";
 
-export const StyledCell = styled.div`
+export default styled.div`
    width: 1rem;
    height: 1rem;
    border: 2px solid grey;
