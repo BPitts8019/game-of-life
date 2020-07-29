@@ -1,10 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import CellContainer from "../cell-container/CellContainer";
 import { start, stop, reset, next } from "../../app/simulation";
 import GameContext from "../../context/game/context";
+import { initialize } from "../../context/game/actions";
 
 const GameBoard = () => {
    const { gameData, gameDispatch } = useContext(GameContext);
+
+   useEffect(() => {
+      gameDispatch(initialize());
+   }, []);
 
    return (
       <div className="game-board">

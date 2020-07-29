@@ -10,7 +10,12 @@ const CellContainer = () => {
       <StyledContainer>
          {gameData.display.map((row, row_idx) =>
             row.map((cellValue, col_idx) => (
-               <Cell key={`cell-${row_idx}_${col_idx}`} value={cellValue} />
+               <Cell
+                  key={`cell-${row_idx}_${col_idx}`}
+                  row={row_idx}
+                  column={col_idx}
+                  value={cellValue}
+               />
             ))
          )}
       </StyledContainer>

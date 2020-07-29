@@ -1,17 +1,29 @@
 import createReducer from "../createReducer";
 import { INITIAL_STATE } from "./context";
-import { NEXT_GENERATION } from "./actions";
+import { NEXT_GENERATION, UPDATE_DISPLAY, INIT_GAME } from "./actions";
 /*** Add Reducers Here ***/
 
-const updateGame = (state, { payload }) => {
+const updateGame = (state, { payload: { display, currentGeneration } }) => {
    return {
       ...state,
-      display: payload.display,
-      currentGeneration: payload.currentGeneration,
+      display,
+      currentGeneration,
+   };
+};
+
+const updateDisplay = (state, { payload: { row, column, newValue } }) => {
+   const newDisplay = JSON.parse(JSON.stringify(state.display));
+   newDisplay[row][column] = newValue;
+
+   return {
+      ...state,
+      display: newDisplay,
    };
 };
 
 export default createReducer(INITIAL_STATE, {
    /** Handlers ***/
+   [INIT_GAME]: updateGame,
    [NEXT_GENERATION]: updateGame,
+   [UPDATE_DISPLAY]: updateDisplay,
 });

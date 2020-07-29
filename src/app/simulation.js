@@ -186,12 +186,7 @@ const nextGeneration = (dispatch) => {
    console.log(JSON.stringify(display));
 
    currGeneration += 1;
-   dispatch(
-      updateGeneration({
-         display,
-         currentGeneration: currGeneration,
-      })
-   );
+   dispatch(updateGeneration(display, currGeneration));
 
    if (maxGenerations !== 0 && currGeneration > maxGenerations) {
       clearInterval(simLoop);
