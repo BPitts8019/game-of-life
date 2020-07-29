@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import StyledCell from "./StyledCell";
 
-const Cell = () => {
+const Cell = ({ value }) => {
+   useEffect(() => {
+      setIsChecked(!!value);
+   }, [value]);
+
    const [isChecked, setIsChecked] = useState(true);
    const handleClick = (event) => {
       setIsChecked(!isChecked);

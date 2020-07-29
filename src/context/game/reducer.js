@@ -6,6 +6,7 @@ import { NEXT_GENERATION } from "./actions";
 const updateGame = (state, { payload }) => {
    return {
       ...state,
+      display: payload.display,
       currentGeneration: payload.currentGeneration,
    };
 };
