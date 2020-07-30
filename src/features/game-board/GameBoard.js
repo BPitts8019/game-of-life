@@ -19,7 +19,7 @@ const GameBoard = () => {
          <CellContainer />
          <button
             onClick={() => {
-               start(gameDispatch, 200);
+               start(gameData.display, gameDispatch, 200);
             }}
          >
             Start
