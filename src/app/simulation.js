@@ -250,7 +250,7 @@ export const stop = () => {
  */
 export const reset = (display, dispatch) => {
    // const reset = () => {
-   buffer = initBuffer(display);
+   buffer = JSON.parse(JSON.stringify(display));
 
    currGeneration = 0;
    dispatch(updateGeneration(buffer, currGeneration));

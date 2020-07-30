@@ -4,12 +4,12 @@ export const UPDATE_DISPLAY = "UPDATE_DISPLAY";
 
 //== Action Creators ==//
 export const initialize = (height, width) => {
-   const display = Array(height).fill(Array(width).fill(0));
-   return { type: INIT_GAME, payload: { display, currentGeneration: 0 } };
+   const buffer = Array(height).fill(Array(width).fill(0));
+   return { type: INIT_GAME, payload: { buffer, currentGeneration: 0 } };
 };
 
-export const updateGeneration = (display, currentGeneration) => {
-   return { type: NEXT_GENERATION, payload: { display, currentGeneration } };
+export const updateGeneration = (buffer, currentGeneration) => {
+   return { type: NEXT_GENERATION, payload: { buffer, currentGeneration } };
 };
 
 export const updateDiplayAt = (row, column, newValue) => {
