@@ -4,11 +4,14 @@ import { start, stop, reset, next } from "../../app/simulation";
 import GameContext from "../../context/game/context";
 import { initialize } from "../../context/game/actions";
 
+const HEIGHT = 25;
+const WIDTH = 25;
+
 const GameBoard = () => {
    const { gameData, gameDispatch } = useContext(GameContext);
 
    useEffect(() => {
-      gameDispatch(initialize());
+      gameDispatch(initialize(HEIGHT, WIDTH));
    }, []);
 
    return (

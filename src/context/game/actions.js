@@ -3,8 +3,8 @@ export const NEXT_GENERATION = "NEXT_GENERATION";
 export const UPDATE_DISPLAY = "UPDATE_DISPLAY";
 
 //== Action Creators ==//
-export const initialize = () => {
-   const display = Array(25).fill(Array(25).fill(0));
+export const initialize = (height, width) => {
+   const display = Array(height).fill(Array(width).fill(0));
    return { type: INIT_GAME, payload: { display, currentGeneration: 0 } };
 };
 
