@@ -94,11 +94,9 @@ const initBuffer = (display) => {
       return;
    }
 
-   const MAX_ROWS = display.length;
-   const MAX_COLUMNS = display[0].length;
    let new_array = [];
-   for (let i = 0; i < MAX_ROWS; i++) {
-      new_array.push(Array(MAX_COLUMNS).fill(0));
+   for (let i = 0; i < display.length; i++) {
+      new_array.push(Array(display[0].length).fill(0));
    }
 
    return new_array;
@@ -114,15 +112,8 @@ const initBuffer = (display) => {
  * @param {number} column
  */
 const getNeighborValue = (display, row, column) => {
-   if (display.length <= 0) {
-      console.error("Your grid isn't initialized!");
-      return;
-   }
-
-   const MAX_ROWS = display.length;
-   const MAX_COLUMNS = display[0].length;
-   if (row >= 0 && row < MAX_ROWS) {
-      if (column >= 0 && column < MAX_COLUMNS) {
+   if (row >= 0 && row < display.length) {
+      if (column >= 0 && column < display[0].length) {
          return display[row][column];
       }
    }
@@ -156,10 +147,7 @@ const countNeighbors = (display, row, column) => {
  * @param {number*} row
  * @param {number*} column
  */
-const applyRules = (display, row, column) => {
-   const isAlive = display[row][column];
-   const num_neighbors = countNeighbors(display, row, column);
-
+const applyRules = (isAlive, num_neighbors) => {
    if (isAlive) {
       if (num_neighbors < 2 || num_neighbors > 3) {
          // Any live cell with fewer than two live neighbours dies, as if by underpopulation.
@@ -184,12 +172,15 @@ const nextGeneration = (display, dispatch) => {
    //simulation calculations
    //use display as data, but save changes to the buffer
    //for each cell,
-   buffer.forEach((row, row_idx) => {
-      row.forEach((cell, cell_idx) => {
+   display.forEach((row, row_idx) => {
+      row.forEach((cell, col_idx) => {
          //get number of neighbors
          //apply game-of-life rules
          //update cell in buffer
-         buffer[row_idx][cell_idx] = applyRules(display, row_idx, cell_idx);
+         buffer[row_idx][col_idx] = applyRules(
+            cell,
+            countNeighbors(display, row_idx, col_idx)
+         );
       });
    });
 
@@ -271,7 +262,7 @@ export const reset = (display, dispatch) => {
  * of maxGenerations
  */
 export const next = (display, dispatch) => {
-   if (!display) {
+   if (!display || display.length <= 0) {
       console.error("Your grid isn't initialized!");
       return;
    }
