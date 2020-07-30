@@ -22,10 +22,16 @@ const GameBoard = () => {
             Start
          </button>
          <button onClick={stop}>Stop</button>
-         <button onClick={reset}>Reset</button>
          <button
             onClick={() => {
-               next(gameDispatch);
+               reset(gameData.display, gameDispatch);
+            }}
+         >
+            Reset
+         </button>
+         <button
+            onClick={() => {
+               next(gameData.display, gameDispatch);
             }}
          >
             Next
