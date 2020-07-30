@@ -41,7 +41,13 @@ const GameBoard = () => {
          </button>
          <button
             onClick={() => {
-               next(gameData.display, gameDispatch);
+               next(
+                  {
+                     display: gameData.display,
+                     generation: gameData.currentGeneration,
+                  },
+                  gameDispatch
+               );
             }}
          >
             Next

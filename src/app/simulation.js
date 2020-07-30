@@ -84,11 +84,10 @@ const PULSAR = [
    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 const simLoops = []; //an array of interval handles to the sim-loop
-let tempStore = null; //a temp location for swapping buffer and display
 let buffer = null; //map being worked on in current generation
 let curDisplay; //a replica of the game display
-let currGeneration = 1; //generation represented by display
-let maxGenerations = 0; // 0 == continue indefinitely
+let currGeneration; //generation represented by display
+let maxGenerations; // 0 == continue indefinitely
 
 /**
  * Get the current value of cell in the display at row and column:
@@ -163,21 +162,16 @@ const nextGeneration = (dispatch) => {
    //    get number of neighbors
    //    apply game-of-life rules
    //    update cell in buffer
-   curDisplay.forEach((row, row_idx) => {
-      row.forEach((cell, col_idx) => {
-         buffer[row_idx][col_idx] = applyRules(
-            cell,
-            countNeighbors(row_idx, col_idx)
-         );
-      });
-   });
+   buffer = curDisplay.map((row, row_idx) =>
+      row.map((cell, col_idx) =>
+         applyRules(cell, countNeighbors(row_idx, col_idx))
+      )
+   );
    currGeneration += 1;
 
-   //swap the display and the buffer
+   //update the display with the buffer
    dispatch(updateGeneration(buffer, currGeneration));
-   tempStore = buffer;
-   buffer = curDisplay;
-   curDisplay = tempStore;
+   curDisplay = buffer;
 
    if (maxGenerations !== 0 && currGeneration >= maxGenerations) {
       stop();
@@ -192,7 +186,7 @@ const nextGeneration = (dispatch) => {
  * @param {object} options
  */
 export const start = (
-   gameData,
+   { display, generation },
    dispatch,
    delay = 50,
    maxGen = maxGenerations
@@ -212,14 +206,12 @@ export const start = (
       maxGen = 0;
    }
 
-   currGeneration = gameData.generation;
-   curDisplay = gameData.display.map((row) => row.map((col) => col));
+   currGeneration = generation;
+   curDisplay = display.map((row) => row.map((col) => col));
    if (!buffer) {
       buffer = curDisplay.map((row) => row.map((_) => 0));
    }
 
-   console.log(`delay: ${delay}`);
-   console.log(`maxGen: ${maxGen}`);
    if (maxGen !== 0 && currGeneration > maxGen) {
       reset(curDisplay, dispatch);
    }
@@ -250,12 +242,13 @@ export const reset = (display, dispatch) => {
  * This will render the next generation  regardless
  * of maxGenerations
  */
-export const next = (display, dispatch) => {
+export const next = ({ display, generation }, dispatch) => {
    if (!display || display.length <= 0) {
       console.error("Your grid isn't initialized!");
       return;
    }
 
+   currGeneration = generation;
    curDisplay = display.map((row) => row.map((col) => col));
    if (!buffer) {
       buffer = display.map((row) => row.map((_) => 0));
