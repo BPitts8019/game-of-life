@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import StyledCell from "./StyledCell";
+import GameContext from "../../context/game/context";
+import { updateDiplayAt } from "../../context/game/actions";
 
-const Cell = ({ value }) => {
-   useEffect(() => {
-      setIsChecked(!!value);
-   }, [value]);
-
-   const [isChecked, setIsChecked] = useState(true);
+const Cell = ({ row, column, value }) => {
+   const { gameDispatch } = useContext(GameContext);
    const handleClick = (event) => {
-      setIsChecked(!isChecked);
+      gameDispatch(updateDiplayAt(row, column, value === 1 ? 0 : 1));
    };
 
    return (
       <StyledCell
-         className={isChecked ? "alive" : ""}
+         className={value === 1 ? "alive" : ""}
          onClick={handleClick}
       ></StyledCell>
    );

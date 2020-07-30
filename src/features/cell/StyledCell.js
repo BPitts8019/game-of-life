@@ -1,15 +1,14 @@
 import styled from "styled-components";
 // import {colors} from "../style-utils/variables";
 
-const alive = "#00cc00";
-const dead = "#cc0000";
+const alive = "#eaea00";
+const dead = "#353535";
 
 export default styled.div`
-   width: 1rem;
-   height: 1rem;
-   border: 2px solid grey;
-   margin: 0.3rem;
-   text-align: center;
+   width: 2rem;
+   height: 2rem;
+   border: 1px solid darkkhaki;
+   /* margin: 0.1rem; */
    background-color: ${dead};
 
    &.alive {
