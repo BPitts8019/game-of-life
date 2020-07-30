@@ -4,8 +4,8 @@ import { start, stop, reset, next } from "../../app/simulation";
 import GameContext from "../../context/game/context";
 import { initialize } from "../../context/game/actions";
 
-const HEIGHT = 25;
-const WIDTH = 25;
+const HEIGHT = 30;
+const WIDTH = 30;
 
 const GameBoard = () => {
    const { gameData, gameDispatch } = useContext(GameContext);
@@ -19,7 +19,14 @@ const GameBoard = () => {
          <CellContainer />
          <button
             onClick={() => {
-               start(gameData.display, gameDispatch, 200);
+               start(
+                  {
+                     display: gameData.display,
+                     generation: gameData.currentGeneration,
+                  },
+                  gameDispatch,
+                  200
+               );
             }}
          >
             Start

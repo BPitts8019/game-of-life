@@ -83,7 +83,7 @@ const PULSAR = [
    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
-let simLoop; //the handle to the sim-loop
+const simLoops = []; //an array of interval handles to the sim-loop
 let tempStore = null; //a temp location for swapping buffer and display
 let buffer = null; //map being worked on in current generation
 let curDisplay; //a replica of the game display
@@ -171,6 +171,7 @@ const nextGeneration = (dispatch) => {
          );
       });
    });
+   currGeneration += 1;
 
    //swap the display and the buffer
    dispatch(updateGeneration(buffer, currGeneration));
@@ -178,9 +179,8 @@ const nextGeneration = (dispatch) => {
    buffer = curDisplay;
    curDisplay = tempStore;
 
-   currGeneration += 1;
    if (maxGenerations !== 0 && currGeneration >= maxGenerations) {
-      clearInterval(simLoop);
+      stop();
    }
 
    console.log(`Generation: ${currGeneration}`);
@@ -192,7 +192,7 @@ const nextGeneration = (dispatch) => {
  * @param {object} options
  */
 export const start = (
-   display,
+   gameData,
    dispatch,
    delay = 50,
    maxGen = maxGenerations
@@ -212,7 +212,8 @@ export const start = (
       maxGen = 0;
    }
 
-   curDisplay = display.map((row) => row.map((col) => col));
+   currGeneration = gameData.generation;
+   curDisplay = gameData.display.map((row) => row.map((col) => col));
    if (!buffer) {
       buffer = curDisplay.map((row) => row.map((_) => 0));
    }
@@ -223,15 +224,14 @@ export const start = (
       reset(curDisplay, dispatch);
    }
    maxGenerations = maxGen;
-   simLoop = setInterval(nextGeneration, delay, dispatch);
+   simLoops.push(setInterval(nextGeneration, delay, dispatch));
 };
 
 /**
  * Stops the simulation
  */
 export const stop = () => {
-   // const stop = () => {
-   clearInterval(simLoop);
+   simLoops.forEach((handle) => clearInterval(handle));
 };
 
 /**
