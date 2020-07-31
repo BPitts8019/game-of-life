@@ -4,9 +4,14 @@ import GameContext from "../../context/game/context";
 import { updateDiplayAt } from "../../context/game/actions";
 
 const Cell = ({ row, column, value }) => {
-   const { gameDispatch } = useContext(GameContext);
+   const {
+      gameData: { isRunning },
+      gameDispatch,
+   } = useContext(GameContext);
    const handleClick = (event) => {
-      gameDispatch(updateDiplayAt(row, column, value === 1 ? 0 : 1));
+      if (!isRunning) {
+         gameDispatch(updateDiplayAt(row, column, value === 1 ? 0 : 1));
+      }
    };
 
    return (
