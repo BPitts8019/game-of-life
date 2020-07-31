@@ -3,6 +3,7 @@ export const START_GAME = "START_GAME";
 export const STOP_GAME = "STOP_GAME";
 export const NEXT_GENERATION = "NEXT_GENERATION";
 export const UPDATE_DISPLAY = "UPDATE_DISPLAY";
+export const UPDATE_DELAY = "UPDATE_DELAY";
 
 //== Action Creators ==//
 export const initialize = (height, width) => {
@@ -20,4 +21,8 @@ export const updateGeneration = (buffer, currentGeneration) => {
 
 export const updateDiplayAt = (row, column, newValue) => {
    return { type: UPDATE_DISPLAY, payload: { row, column, newValue } };
+};
+
+export const updateDelay = (newDelay) => {
+   return { type: UPDATE_DELAY, payload: { newDelay } };
 };

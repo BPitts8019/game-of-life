@@ -6,6 +6,7 @@ import {
    INIT_GAME,
    START_GAME,
    STOP_GAME,
+   UPDATE_DELAY,
 } from "./actions";
 
 const updateGame = (state, { payload: { buffer, currentGeneration } }) => {
@@ -42,6 +43,13 @@ const stopGame = (state) => {
    };
 };
 
+const updateGameDelay = (state, { newDelay }) => {
+   return {
+      ...state,
+      gameDelay: newDelay,
+   };
+};
+
 export default createReducer(INITIAL_STATE, {
    /** Handlers ***/
    [INIT_GAME]: updateGame,
@@ -49,4 +57,5 @@ export default createReducer(INITIAL_STATE, {
    [STOP_GAME]: stopGame,
    [NEXT_GENERATION]: updateGame,
    [UPDATE_DISPLAY]: updateDisplay,
+   [UPDATE_DELAY]: updateGameDelay,
 });
