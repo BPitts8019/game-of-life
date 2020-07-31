@@ -87,7 +87,6 @@ const simLoops = []; //an array of interval handles to the sim-loop
 let buffer = null; //map being worked on in current generation
 let curDisplay; //a replica of the game display
 let currGeneration; //generation represented by display
-let maxGenerations; // 0 == continue indefinitely
 
 /**
  * Get the current value of cell in the display at row and column:
@@ -131,8 +130,8 @@ const countNeighbors = (row, column) => {
 /**
  * Applies the rules of Conway's Game of Life to the cell at row and
  * column in display.
- * @param {number*} row
- * @param {number*} column
+ * @param {boolean} isAlive
+ * @param {number} num_neighbors
  */
 const applyRules = (isAlive, num_neighbors) => {
    if (isAlive) {
@@ -154,6 +153,7 @@ const applyRules = (isAlive, num_neighbors) => {
 
 /**
  * Each call of this function represents one generation
+ * @param {function} dispatch Used to update the frontend
  */
 const nextGeneration = (dispatch) => {
    //simulation calculations
@@ -173,24 +173,17 @@ const nextGeneration = (dispatch) => {
    dispatch(updateGeneration(buffer, currGeneration));
    curDisplay = buffer;
 
-   if (maxGenerations !== 0 && currGeneration >= maxGenerations) {
-      stop();
-   }
-
    console.log(`Generation: ${currGeneration}`);
    console.log(JSON.stringify(buffer));
 };
 
 /**
  * Starts/resumes the simulation given some options
- * @param {object} options
+ * @param {object} gameData
+ * @param {function} dispatch Used to update the frontend
+ * @param {number} [delay=50] The number of miliseconds between generations
  */
-export const start = (
-   { display, generation },
-   dispatch,
-   delay = 50,
-   maxGen = maxGenerations
-) => {
+export const start = ({ display, generation }, dispatch, delay = 50) => {
    const MIN_DELAY = 100;
    const MAX_DELAY = 1000;
 
@@ -202,20 +195,12 @@ export const start = (
       delay = MAX_DELAY;
    }
 
-   if (maxGen < 0) {
-      maxGen = 0;
-   }
-
    currGeneration = generation;
    curDisplay = display.map((row) => row.map((col) => col));
    if (!buffer) {
       buffer = curDisplay.map((row) => row.map((_) => 0));
    }
 
-   if (maxGen !== 0 && currGeneration > maxGen) {
-      reset(curDisplay, dispatch);
-   }
-   maxGenerations = maxGen;
    simLoops.push(setInterval(nextGeneration, delay, dispatch));
 };
 
@@ -227,7 +212,9 @@ export const stop = () => {
 };
 
 /**
- * Resets the current simulation
+ *  Resets the current simulation
+ * @param {Array} display The current generation of cells on the board
+ * @param {function} dispatch Used to update the frontend
  */
 export const reset = (display, dispatch) => {
    curDisplay = display.map((row) => row.map((col) => col));
@@ -239,8 +226,8 @@ export const reset = (display, dispatch) => {
 
 /**
  * Renders the next generation in simulation
- * This will render the next generation  regardless
- * of maxGenerations
+ * @param {object} gameData
+ * @param {function} dispatch Used to update the frontend
  */
 export const next = ({ display, generation }, dispatch) => {
    if (!display || display.length <= 0) {
