@@ -216,7 +216,7 @@ export const stop = () => {
  * @param {Array} display The current generation of cells on the board
  * @param {function} dispatch Used to update the frontend
  */
-export const reset = (display, dispatch) => {
+export const reset = ({ display }, dispatch) => {
    curDisplay = display.map((row) => row.map((col) => col));
    buffer = display.map((row) => row.map((_) => 0));
 
