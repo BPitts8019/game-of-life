@@ -6,10 +6,17 @@ import { start, stop, reset, next } from "../../app/simulation";
 const ControlPanel = () => {
    return (
       <StyledControlPanel>
-         <Button label={"Start"} fn={start} delay={50} />
-         <Button label={"Stop"} fn={stop} enableWhileRuning />
-         <Button label={"Reset"} fn={reset} />
-         <Button label={"Next"} fn={next} />
+         <div className="main-controls">
+            <Button label={"Start"} fn={start} delay={50} />
+            <Button label={"Stop"} fn={stop} enableWhileRuning />
+            <Button label={"Reset"} fn={reset} />
+            <Button label={"Next"} fn={next} />
+         </div>
+         <div className="presets">
+            <Button label={"Pulsars"} fn={() => {}} />
+            <Button label={"Glider Gun"} fn={() => {}} />
+            <Button label={"Puffer Train"} fn={() => {}} />
+         </div>
       </StyledControlPanel>
    );
 };
