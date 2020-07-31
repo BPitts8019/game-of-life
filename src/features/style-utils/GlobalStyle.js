@@ -27,7 +27,6 @@ export default createGlobalStyle`
 
    h1, h2, h3, h4, h5 {
       font-family: ${headerFont};
-      /* color: ${colors.headerColor}; */
       font-weight: bold;
    }
 
@@ -64,8 +63,6 @@ export default createGlobalStyle`
    }
 
    .app {
-      /* background-color: ${colors.attentionColor};
-      color: ${colors.darkText}; */
       margin: 0 auto;
       min-width: ${MIN_WIDTH};
       max-width: ${MAX_WIDTH};
@@ -78,6 +75,15 @@ export default createGlobalStyle`
          p {
             text-align: right;
          }
+      }
+
+      .console {
+         display: flex;
+         flex-flow: row nowrap;
+         justify-content: space-between;
+         align-items: flex-end;
+
+         width: 60rem;
       }
    }
 `;
