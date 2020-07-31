@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import GameContext from "../../context/game/context";
 
-const Button = ({ label, fn, delay }) => {
+const Button = ({ label, fn, delay, enableWhileRuning }) => {
    const { gameData, gameDispatch } = useContext(GameContext);
    const clickHandler = (event) => {
       fn(
@@ -14,7 +14,14 @@ const Button = ({ label, fn, delay }) => {
       );
    };
 
-   return <button onClick={clickHandler}>{label}</button>;
+   return (
+      <button
+         onClick={clickHandler}
+         disabled={!enableWhileRuning && gameData.isRunning}
+      >
+         {label}
+      </button>
+   );
 };
 
 export default Button;

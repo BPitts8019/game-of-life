@@ -1,4 +1,4 @@
-import { updateGeneration, updateDiplayAt } from "../context/game/actions";
+import { updateGeneration, toggleGame } from "../context/game/actions";
 
 const PRESET_01 = [
    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -201,13 +201,17 @@ export const start = ({ display, generation }, dispatch, delay = 50) => {
       buffer = curDisplay.map((row) => row.map((_) => 0));
    }
 
+   dispatch(toggleGame(true));
    simLoops.push(setInterval(nextGeneration, delay, dispatch));
 };
 
 /**
  * Stops the simulation
+ * @param {object} gameData unused
+ * @param {function} dispatch Used to update the frontend
  */
-export const stop = () => {
+export const stop = (gameData, dispatch) => {
+   dispatch(toggleGame(false));
    simLoops.forEach((handle) => clearInterval(handle));
 };
 
