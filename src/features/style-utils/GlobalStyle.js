@@ -83,7 +83,7 @@ export default createGlobalStyle`
          justify-content: space-between;
          align-items: flex-end;
 
-         width: 60rem;
+         width: 80rem;
       }
    }
 `;

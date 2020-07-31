@@ -7,7 +7,7 @@ const ControlPanel = () => {
    return (
       <StyledControlPanel>
          <Button label={"Start"} fn={start} delay={50} />
-         <Button label={"Stop"} fn={stop} />
+         <Button label={"Stop"} fn={stop} enableWhileRuning />
          <Button label={"Reset"} fn={reset} />
          <Button label={"Next"} fn={next} />
       </StyledControlPanel>

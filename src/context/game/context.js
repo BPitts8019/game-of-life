@@ -4,6 +4,7 @@ export const INITIAL_STATE = {
    display: [],
    isRunning: false,
    currentGeneration: 0,
+   gameDelay: 200,
 };
 
 const NO_PROVIDER = {
