@@ -3,10 +3,12 @@ import { INITIAL_STATE } from "./context";
 import { NEXT_GENERATION, UPDATE_DISPLAY, INIT_GAME } from "./actions";
 /*** Add Reducers Here ***/
 
-const updateGame = (state, { payload: { display, currentGeneration } }) => {
+const updateGame = (state, { payload: { buffer, currentGeneration } }) => {
+   const newDisplay = JSON.parse(JSON.stringify(buffer));
+
    return {
       ...state,
-      display,
+      display: newDisplay,
       currentGeneration,
    };
 };

@@ -1,7 +1,5 @@
-import { updateGeneration } from "../context/game/actions";
+import { updateGeneration, updateDiplayAt } from "../context/game/actions";
 
-const MAX_ROWS = 25;
-const MAX_COLUMNS = 25;
 const PRESET_01 = [
    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -85,20 +83,10 @@ const PULSAR = [
    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
-let simLoop; //the handle to the sim-loop
+const simLoops = []; //an array of interval handles to the sim-loop
 let buffer = null; //map being worked on in current generation
-let display = null; //current map - displayed on the screen
-let currGeneration = 1; //generation represented by display
-let maxGenerations = 0; // 0 == continue indefinitely
-
-const initBuffer = () => {
-   let new_array = [];
-   for (let i = 0; i < MAX_ROWS; i++) {
-      new_array.push(Array(MAX_COLUMNS).fill(0));
-   }
-
-   return new_array;
-};
+let curDisplay; //a replica of the game display
+let currGeneration; //generation represented by display
 
 /**
  * Get the current value of cell in the display at row and column:
@@ -110,9 +98,9 @@ const initBuffer = () => {
  * @param {number} column
  */
 const getNeighborValue = (row, column) => {
-   if (row >= 0 && row < MAX_ROWS) {
-      if (column >= 0 && column < MAX_COLUMNS) {
-         return display[row][column];
+   if (row >= 0 && row < curDisplay.length) {
+      if (column >= 0 && column < curDisplay[0].length) {
+         return curDisplay[row][column];
       }
    }
 
@@ -142,13 +130,10 @@ const countNeighbors = (row, column) => {
 /**
  * Applies the rules of Conway's Game of Life to the cell at row and
  * column in display.
- * @param {number*} row
- * @param {number*} column
+ * @param {boolean} isAlive
+ * @param {number} num_neighbors
  */
-const applyRules = (row, column) => {
-   const isAlive = display[row][column];
-   const num_neighbors = countNeighbors(row, column);
-
+const applyRules = (isAlive, num_neighbors) => {
    if (isAlive) {
       if (num_neighbors < 2 || num_neighbors > 3) {
          // Any live cell with fewer than two live neighbours dies, as if by underpopulation.
@@ -165,42 +150,40 @@ const applyRules = (row, column) => {
 
    return isAlive;
 };
+
 /**
  * Each call of this function represents one generation
+ * @param {function} dispatch Used to update the frontend
  */
 const nextGeneration = (dispatch) => {
    //simulation calculations
    //use display as data, but save changes to the buffer
    //for each cell,
-   buffer.forEach((row, row_idx) => {
-      row.forEach((cell, cell_idx) => {
-         //get number of neighbors
-         //apply game-of-life rules
-         //update cell in buffer
-         buffer[row_idx][cell_idx] = applyRules(row_idx, cell_idx);
-      });
-   });
-
-   //swap the display and the buffer
-   display = JSON.parse(JSON.stringify(buffer));
-   console.log(JSON.stringify(display));
-
+   //    get number of neighbors
+   //    apply game-of-life rules
+   //    update cell in buffer
+   buffer = curDisplay.map((row, row_idx) =>
+      row.map((cell, col_idx) =>
+         applyRules(cell, countNeighbors(row_idx, col_idx))
+      )
+   );
    currGeneration += 1;
-   dispatch(updateGeneration(display, currGeneration));
 
-   if (maxGenerations !== 0 && currGeneration > maxGenerations) {
-      clearInterval(simLoop);
-   }
+   //update the display with the buffer
+   dispatch(updateGeneration(buffer, currGeneration));
+   curDisplay = buffer;
 
    console.log(`Generation: ${currGeneration}`);
+   console.log(JSON.stringify(buffer));
 };
 
 /**
  * Starts/resumes the simulation given some options
- * @param {object} options
+ * @param {object} gameData
+ * @param {function} dispatch Used to update the frontend
+ * @param {number} [delay=50] The number of miliseconds between generations
  */
-export const start = (dispatch, delay = 50, maxGen = maxGenerations) => {
-   // const start = (delay = 200, maxGen = maxGenerations) => {
+export const start = ({ display, generation }, dispatch, delay = 50) => {
    const MIN_DELAY = 100;
    const MAX_DELAY = 1000;
 
@@ -212,51 +195,52 @@ export const start = (dispatch, delay = 50, maxGen = maxGenerations) => {
       delay = MAX_DELAY;
    }
 
-   if (maxGen < 0) {
-      maxGen = 0;
+   currGeneration = generation;
+   curDisplay = display.map((row) => row.map((col) => col));
+   if (!buffer) {
+      buffer = curDisplay.map((row) => row.map((_) => 0));
    }
 
-   if (!display || !buffer) {
-      reset();
-   }
-
-   console.log(`delay: ${delay}`);
-   console.log(`maxGen: ${maxGen}`);
-   if (maxGen !== 0 && currGeneration > maxGen) {
-      reset();
-   }
-   maxGenerations = maxGen;
-   simLoop = setInterval(nextGeneration, delay, dispatch);
+   simLoops.push(setInterval(nextGeneration, delay, dispatch));
 };
 
 /**
  * Stops the simulation
  */
 export const stop = () => {
-   // const stop = () => {
-   clearInterval(simLoop);
+   simLoops.forEach((handle) => clearInterval(handle));
 };
 
 /**
- * Resets the current simulation
+ *  Resets the current simulation
+ * @param {Array} display The current generation of cells on the board
+ * @param {function} dispatch Used to update the frontend
  */
-export const reset = () => {
-   // const reset = () => {
-   buffer = initBuffer();
-   display = JSON.parse(JSON.stringify(PRESET_01));
+export const reset = (display, dispatch) => {
+   curDisplay = display.map((row) => row.map((col) => col));
+   buffer = display.map((row) => row.map((_) => 0));
+
    currGeneration = 0;
+   dispatch(updateGeneration(buffer, currGeneration));
 };
 
 /**
  * Renders the next generation in simulation
- * This will render the next generation  regardless
- * of maxGenerations
+ * @param {object} gameData
+ * @param {function} dispatch Used to update the frontend
  */
-export const next = (dispatch) => {
-   // const next = () => {
-   if (!display || !buffer) {
-      reset();
+export const next = ({ display, generation }, dispatch) => {
+   if (!display || display.length <= 0) {
+      console.error("Your grid isn't initialized!");
+      return;
    }
+
+   currGeneration = generation;
+   curDisplay = display.map((row) => row.map((col) => col));
+   if (!buffer) {
+      buffer = display.map((row) => row.map((_) => 0));
+   }
+
    nextGeneration(dispatch);
 };
 

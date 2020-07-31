@@ -4,11 +4,14 @@ import { start, stop, reset, next } from "../../app/simulation";
 import GameContext from "../../context/game/context";
 import { initialize } from "../../context/game/actions";
 
+const HEIGHT = 30;
+const WIDTH = 30;
+
 const GameBoard = () => {
    const { gameData, gameDispatch } = useContext(GameContext);
 
    useEffect(() => {
-      gameDispatch(initialize());
+      gameDispatch(initialize(HEIGHT, WIDTH));
    }, []);
 
    return (
@@ -16,16 +19,35 @@ const GameBoard = () => {
          <CellContainer />
          <button
             onClick={() => {
-               start(gameDispatch, 200);
+               start(
+                  {
+                     display: gameData.display,
+                     generation: gameData.currentGeneration,
+                  },
+                  gameDispatch,
+                  200
+               );
             }}
          >
             Start
          </button>
          <button onClick={stop}>Stop</button>
-         <button onClick={reset}>Reset</button>
          <button
             onClick={() => {
-               next(gameDispatch);
+               reset(gameData.display, gameDispatch);
+            }}
+         >
+            Reset
+         </button>
+         <button
+            onClick={() => {
+               next(
+                  {
+                     display: gameData.display,
+                     generation: gameData.currentGeneration,
+                  },
+                  gameDispatch
+               );
             }}
          >
             Next

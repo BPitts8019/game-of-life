@@ -3,13 +3,13 @@ export const NEXT_GENERATION = "NEXT_GENERATION";
 export const UPDATE_DISPLAY = "UPDATE_DISPLAY";
 
 //== Action Creators ==//
-export const initialize = () => {
-   const display = Array(25).fill(Array(25).fill(0));
-   return { type: INIT_GAME, payload: { display, currentGeneration: 0 } };
+export const initialize = (height, width) => {
+   const buffer = Array(height).fill(Array(width).fill(0));
+   return { type: INIT_GAME, payload: { buffer, currentGeneration: 0 } };
 };
 
-export const updateGeneration = (display, currentGeneration) => {
-   return { type: NEXT_GENERATION, payload: { display, currentGeneration } };
+export const updateGeneration = (buffer, currentGeneration) => {
+   return { type: NEXT_GENERATION, payload: { buffer, currentGeneration } };
 };
 
 export const updateDiplayAt = (row, column, newValue) => {
