@@ -6,7 +6,7 @@ import GameContext from "../../context/game/context";
 import { initialize } from "../../context/game/actions";
 
 const HEIGHT = 30;
-const WIDTH = 30;
+const WIDTH = 40;
 
 const GameBoard = () => {
    const { gameData, gameDispatch } = useContext(GameContext);

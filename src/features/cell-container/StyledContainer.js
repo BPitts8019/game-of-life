@@ -6,7 +6,7 @@ export default styled.div`
    flex-flow: row wrap;
 
    max-height: 60rem;
-   max-width: 60rem;
+   max-width: 80rem;
    margin-bottom: 1.7rem;
    /* background-color: magenta; */
 `;
