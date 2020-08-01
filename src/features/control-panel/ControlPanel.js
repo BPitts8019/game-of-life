@@ -3,9 +3,12 @@ import StyledControlPanel from "./StyledControlPanel";
 import Button from "../button/Button";
 import { start, stop, reset, next } from "../../app/simulation";
 import { PULSARS, GLIDER_GUN, PUFFER_TRAIN } from "../../app/presets";
+import { selectPreset } from "../../context/game/actions";
 
 const ControlPanel = () => {
-   const presetClick = (_, dispatch, { preset }) => {};
+   const presetClick = (_, dispatch, { preset }) => {
+      dispatch(selectPreset(preset));
+   };
 
    return (
       <StyledControlPanel>
