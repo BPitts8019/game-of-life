@@ -1,24 +1,21 @@
 import React, { useContext } from "react";
 import GameContext from "../../context/game/context";
 
-const Button = ({ label, fn, delay, enableWhileRuning }) => {
-   const { gameData, gameDispatch } = useContext(GameContext);
+const Button = ({
+   label,
+   fn,
+   options: { delay, enableWhileRuning, preset } = {},
+}) => {
+   const {
+      gameData: { display, currentGeneration, isRunning },
+      gameDispatch,
+   } = useContext(GameContext);
    const clickHandler = (event) => {
-      fn(
-         {
-            display: gameData.display,
-            generation: gameData.currentGeneration,
-         },
-         gameDispatch,
-         delay
-      );
+      fn({ display, currentGeneration }, gameDispatch, { delay, preset });
    };
 
    return (
-      <button
-         onClick={clickHandler}
-         disabled={!enableWhileRuning && gameData.isRunning}
-      >
+      <button onClick={clickHandler} disabled={!enableWhileRuning && isRunning}>
          {label}
       </button>
    );

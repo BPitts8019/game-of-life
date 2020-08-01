@@ -12,7 +12,11 @@ let currGeneration; //generation represented by display
  * @param {function} dispatch Used to update the frontend
  * @param {number} [delay=50] The number of miliseconds between generations
  */
-export const start = ({ display, generation }, dispatch, delay = 100) => {
+export const start = (
+   { display, currentGeneration },
+   dispatch,
+   { delay = 100 }
+) => {
    const MIN_DELAY = 100;
    const MAX_DELAY = 1000;
 
@@ -24,7 +28,7 @@ export const start = ({ display, generation }, dispatch, delay = 100) => {
       delay = MAX_DELAY;
    }
 
-   currGeneration = generation;
+   currGeneration = currentGeneration;
    curDisplay = display.map((row) => row.map((col) => col));
    if (!buffer) {
       buffer = curDisplay.map((row) => row.map((_) => 0));
@@ -62,13 +66,13 @@ export const reset = ({ display }, dispatch) => {
  * @param {object} gameData
  * @param {function} dispatch Used to update the frontend
  */
-export const next = ({ display, generation }, dispatch) => {
+export const next = ({ display, currentGeneration }, dispatch) => {
    if (!display || display.length <= 0) {
       console.error("Your grid isn't initialized!");
       return;
    }
 
-   currGeneration = generation;
+   currGeneration = currentGeneration;
    curDisplay = display.map((row) => row.map((col) => col));
    if (!buffer) {
       buffer = display.map((row) => row.map((_) => 0));

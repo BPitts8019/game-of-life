@@ -4,6 +4,7 @@ export const STOP_GAME = "STOP_GAME";
 export const NEXT_GENERATION = "NEXT_GENERATION";
 export const UPDATE_DISPLAY = "UPDATE_DISPLAY";
 export const UPDATE_DELAY = "UPDATE_DELAY";
+export const SELECT_PRESET = "SELECT_PRESET";
 
 //== Action Creators ==//
 export const initialize = (height, width) => {
@@ -25,4 +26,11 @@ export const updateDiplayAt = (row, column, newValue) => {
 
 export const updateDelay = (newDelay) => {
    return { type: UPDATE_DELAY, payload: { newDelay } };
+};
+
+export const selectPreset = (selection) => {
+   return {
+      type: SELECT_PRESET,
+      payload: { buffer: selection, currentGeneration: 0 },
+   };
 };

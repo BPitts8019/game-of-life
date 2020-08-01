@@ -2,14 +2,43 @@ import React from "react";
 import StyledControlPanel from "./StyledControlPanel";
 import Button from "../button/Button";
 import { start, stop, reset, next } from "../../app/simulation";
+import { PULSARS, GLIDER_GUN, PUFFER_TRAIN } from "../../app/presets";
+import { selectPreset } from "../../context/game/actions";
 
 const ControlPanel = () => {
+   const presetClick = (_, dispatch, { preset }) => {
+      dispatch(selectPreset(preset));
+   };
+
    return (
       <StyledControlPanel>
-         <Button label={"Start"} fn={start} delay={50} />
-         <Button label={"Stop"} fn={stop} enableWhileRuning />
-         <Button label={"Reset"} fn={reset} />
-         <Button label={"Next"} fn={next} />
+         <div className="main-controls">
+            <Button label={"Start"} fn={start} />
+            <Button
+               label={"Stop"}
+               fn={stop}
+               options={{ enableWhileRuning: true }}
+            />
+            <Button label={"Reset"} fn={reset} />
+            <Button label={"Next"} fn={next} />
+         </div>
+         <div className="presets">
+            <Button
+               label={"Pulsars"}
+               fn={presetClick}
+               options={{ preset: PULSARS }}
+            />
+            <Button
+               label={"Glider Gun"}
+               fn={presetClick}
+               options={{ preset: GLIDER_GUN }}
+            />
+            <Button
+               label={"Puffer Train"}
+               fn={presetClick}
+               options={{ preset: PUFFER_TRAIN }}
+            />
+         </div>
       </StyledControlPanel>
    );
 };
