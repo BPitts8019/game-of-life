@@ -15,7 +15,7 @@ let currGeneration; //generation represented by display
 export const start = (
    { display, currentGeneration },
    dispatch,
-   delay = 100
+   { delay = 100 }
 ) => {
    const MIN_DELAY = 100;
    const MAX_DELAY = 1000;

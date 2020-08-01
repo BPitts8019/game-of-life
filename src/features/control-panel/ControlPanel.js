@@ -2,8 +2,11 @@ import React from "react";
 import StyledControlPanel from "./StyledControlPanel";
 import Button from "../button/Button";
 import { start, stop, reset, next } from "../../app/simulation";
+import { PULSARS, GLIDER_GUN, PUFFER_TRAIN } from "../../app/presets";
 
 const ControlPanel = () => {
+   const presetClick = (_, dispatch, { preset }) => {};
+
    return (
       <StyledControlPanel>
          <div className="main-controls">
@@ -17,9 +20,21 @@ const ControlPanel = () => {
             <Button label={"Next"} fn={next} />
          </div>
          <div className="presets">
-            <Button label={"Pulsars"} fn={() => {}} />
-            <Button label={"Glider Gun"} fn={() => {}} />
-            <Button label={"Puffer Train"} fn={() => {}} />
+            <Button
+               label={"Pulsars"}
+               fn={presetClick}
+               options={{ preset: PULSARS }}
+            />
+            <Button
+               label={"Glider Gun"}
+               fn={presetClick}
+               options={{ preset: GLIDER_GUN }}
+            />
+            <Button
+               label={"Puffer Train"}
+               fn={presetClick}
+               options={{ preset: PUFFER_TRAIN }}
+            />
          </div>
       </StyledControlPanel>
    );
