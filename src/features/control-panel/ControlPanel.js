@@ -8,7 +8,11 @@ const ControlPanel = () => {
       <StyledControlPanel>
          <div className="main-controls">
             <Button label={"Start"} fn={start} />
-            <Button label={"Stop"} fn={stop} enableWhileRuning />
+            <Button
+               label={"Stop"}
+               fn={stop}
+               options={{ enableWhileRuning: true }}
+            />
             <Button label={"Reset"} fn={reset} />
             <Button label={"Next"} fn={next} />
          </div>

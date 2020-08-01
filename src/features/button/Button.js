@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import GameContext from "../../context/game/context";
 
-const Button = ({ label, fn, delay, enableWhileRuning }) => {
+const Button = ({ label, fn, options: { delay, enableWhileRuning } = {} }) => {
    const {
       gameData: { display, currentGeneration, isRunning },
       gameDispatch,
