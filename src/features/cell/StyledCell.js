@@ -11,7 +11,15 @@ export default styled.div`
    /* margin: 0.1rem; */
    background-color: ${dead};
 
+   &:hover {
+      background-color: ${alive};
+   }
+
    &.alive {
       background-color: ${alive};
+
+      &:hover {
+         background-color: white;
+      }
    }
 `;
