@@ -20,6 +20,6 @@ export default styled.div`
       justify-content: space-between;
       /* background-color: yellow; */
 
-      width: 30rem;
+      width: 32rem;
    }
 `;

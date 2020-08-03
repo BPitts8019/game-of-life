@@ -10,6 +10,13 @@ const ControlPanel = () => {
       dispatch(selectPreset(preset));
    };
 
+   const randomPreset = ({ display }, dispatch) => {
+      const randomBuffer = display.map((row) =>
+         row.map((column) => Math.round(Math.random()))
+      );
+      dispatch(selectPreset(randomBuffer));
+   };
+
    return (
       <StyledControlPanel>
          <div className="main-controls">
@@ -38,6 +45,7 @@ const ControlPanel = () => {
                fn={presetClick}
                options={{ preset: PUFFER_TRAIN }}
             />
+            <Button label={"Random"} fn={randomPreset} />
          </div>
       </StyledControlPanel>
    );
