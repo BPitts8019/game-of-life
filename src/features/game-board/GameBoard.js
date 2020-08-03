@@ -22,7 +22,6 @@ const GameBoard = () => {
             <ControlPanel />
             <h1>Generation: {gameData.currentGeneration}</h1>
          </div>
-         <div className={"display"}></div>
       </div>
    );
 };

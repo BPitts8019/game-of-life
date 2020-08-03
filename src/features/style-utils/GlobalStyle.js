@@ -40,6 +40,8 @@ export default createGlobalStyle`
 
    h3 {
       font-size: 1.755rem;
+      /* text-decoration: underline; */
+      margin-bottom: 0.8rem;
    }
 
    h4 {
@@ -77,6 +79,42 @@ export default createGlobalStyle`
          }
       }
 
+      .container {
+         display: flex;
+         flex-flow: row nowrap;
+
+         width: 100%;
+
+         .game-board {
+            margin-right: 3rem;
+         }
+
+         .extra-info {
+            width: 200px;
+            text-align: justify;
+
+            h3 {
+               text-align: center;
+            }
+
+            hr {
+               background-image: linear-gradient(to right, #00000000, #594236bf, #00000000);
+               border: 0;
+               height: 2px;
+               margin: 1.7rem 0;
+               width: 100%;
+            }
+
+            ol {
+               li {
+                  font-family: ${bodyFont};
+                  font-size: 1.4rem;
+                  margin: 1.2rem 0;
+               }
+            }
+         }
+      }
+      
       .console {
          display: flex;
          flex-flow: row nowrap;
